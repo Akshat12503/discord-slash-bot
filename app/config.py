@@ -1,0 +1,17 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
+
+DISCORD_APPLICATION_ID = os.getenv("DISCORD_APPLICATION_ID")
+DISCORD_PUBLIC_KEY = os.getenv("DISCORD_PUBLIC_KEY")
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+
+SESSION_SECRET = os.getenv("SESSION_SECRET")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
+MIRROR_WEBHOOK_URL = os.getenv("MIRROR_WEBHOOK_URL")
