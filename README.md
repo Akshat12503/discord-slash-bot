@@ -151,18 +151,20 @@ Row Level Security is enabled with no policies — only the backend, using the s
 
 ## Deployment
 
-[FILL IN — e.g.: Deployed to Render as a single web service. Environment variables set in Render's dashboard. Root directory: repo root. Build command: `pip install -r requirements.txt`. Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.]
-
-Live URL: [FILL IN]
+Deployed to Render as a single web service, connected directly to the GitHub repo for auto-deploy on push to `main`. Environment variables configured in Render's dashboard (see list above). Build command: `pip install -r requirements.txt`. Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
+  
+Note: Render's free tier spins down after ~15 minutes of inactivity. The first request after idling may take 10-30 seconds to respond while the service wakes up — this can occasionally cause a slash command's first attempt to time out; a retry immediately after succeeds.
+  
+Live URL: https://discord-slash-bot-d96o.onrender.com
 
 ## Testing it yourself
 
-1. Join the test Discord server: [FILL IN INVITE LINK]
+1. Join the test Discord server: https://discord.gg/k5zAC2e5T
 2. Run `/status` or `/report <some text>` in any channel.
-3. Watch the bot reply, and check the mirror channel `#[FILL IN CHANNEL NAME]` for the mirrored notification.
-4. Visit the dashboard: `[FILL IN DEPLOYED URL]/login`
-   - Email: `evaluator@test.com`
-   - Password: `[FILL IN]`
+3. Watch the bot reply, and check the mirror channel `#notification` (`Channel ID: 1521960962582777969`) for the mirrored notification.
+4. Visit the dashboard: `https://discord-slash-bot-d96o.onrender.com/login`
+   - Email: `testadmin@gmail.com`
+   - Password: `testadmin`
 
 ## Security notes
 
