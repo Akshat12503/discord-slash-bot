@@ -4,10 +4,12 @@ and returns (response_text, action_taken_description).
 """
 
 
-def handle_report(options: dict, user_display_name: str) -> tuple[str, str]:
+def handle_report(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list]:
     """
     Handles /report <text>.
     Simple rule: flag as 'urgent' if certain keywords are present.
+    Returns (response_text, action_taken, components) — components is a
+    Discord message-components array (a 'Mark Resolved' button).
     """
     text = options.get("text", "")
     urgent_keywords = ["urgent", "asap", "broken", "down", "critical"]
@@ -20,7 +22,30 @@ def handle_report(options: dict, user_display_name: str) -> tuple[str, str]:
         response = f"✅ Report received from {user_display_name}: \"{text}\""
         action = "logged_normal"
 
-    return response, action
+    components = [
+        {
+            "type": 1,  # ACTION_ROW
+            "components": [
+                {
+                    "type": 2,  # BUTTON
+                    "style": 3,  # SUCCESS (green)
+                    "label": "Mark Resolved",
+                    "custom_id": f"resolve:{discord_interaction_id}",
+                }
+            ],
+        }
+    ]
+
+    return response, action, components
+
+
+def handle_status(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list]:
+    """
+    Handles /status. Just a simple health-check style reply. No buttons.
+    """
+    response = "🟢 Bot is online and processing commands normally."
+    action = "status_check"
+    return response, action, []
 
 
 def handle_status(options: dict, user_display_name: str) -> tuple[str, str]:
@@ -43,3 +68,13 @@ def parse_options(interaction_data: dict) -> dict:
     """Converts Discord's options array format into a simple {name: value} dict."""
     options = interaction_data.get("options", [])
     return {opt["name"]: opt["value"] for opt in options}
+
+def handle_resolve_button(custom_id: str) -> tuple[str, list]:
+    """
+    Handles a 'Mark Resolved' button click.
+    Returns (new_content, new_components) to directly update the message.
+    """
+    original_interaction_id = custom_id.split(":", 1)[1] if ":" in custom_id else None
+    new_content = "✅ This report has been marked as resolved."
+    new_components = []  # remove the button
+    return new_content, new_components, original_interaction_id
