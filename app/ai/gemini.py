@@ -17,6 +17,7 @@ async def summarize_report(text: str) -> str | None:
     (callers should treat None as 'skip AI, don't block the reply').
     """
     if not GEMINI_API_KEY:
+        print("Gemini: GEMINI_API_KEY is not set — skipping AI step")
         return None
 
     prompt = (
@@ -36,15 +37,18 @@ async def summarize_report(text: str) -> str | None:
         async with httpx.AsyncClient(timeout=8) as client:
             resp = await client.post(GEMINI_URL, headers=headers, params=params, json=body)
             if resp.status_code != 200:
+                print(f"Gemini API error: {resp.status_code} {resp.text}")
                 return None
             data = resp.json()
             candidates = data.get("candidates", [])
             if not candidates:
+                print(f"Gemini API: no candidates in response: {data}")
                 return None
             parts = candidates[0].get("content", {}).get("parts", [])
             if not parts:
+                print(f"Gemini API: no parts in response: {data}")
                 return None
             return parts[0].get("text", "").strip()
-    except Exception:
-        # Never let an AI failure break the report flow — just skip it.
+    except Exception as e:
+        print(f"Gemini API exception: {e}")
         return None
