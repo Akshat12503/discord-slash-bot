@@ -6,7 +6,7 @@ to avoid pulling in the full SDK for one call.
 import httpx
 from app.config import GEMINI_API_KEY
 
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
 
