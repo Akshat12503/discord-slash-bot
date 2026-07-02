@@ -48,13 +48,13 @@ def handle_status(options: dict, user_display_name: str, discord_interaction_id:
     return response, action, []
 
 
-def handle_status(options: dict, user_display_name: str) -> tuple[str, str]:
+def handle_status(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list]:
     """
-    Handles /status. Just a simple health-check style reply.
+    Handles /status. Just a simple health-check style reply. No buttons.
     """
     response = "🟢 Bot is online and processing commands normally."
     action = "status_check"
-    return response, action
+    return response, action, []
 
 
 # Registry mapping command name -> handler function
