@@ -53,9 +53,9 @@ async def process_command(payload: dict):
         handler = COMMAND_HANDLERS.get(command_name)
 
         if not handler:
-            response_text, action, components = f"Unknown command: {command_name}", "unknown_command", []
+            response_text, action, components, ai_summary = f"Unknown command: {command_name}", "unknown_command", [], None
         else:
-            response_text, action, components = handler(options, user_display_name, interaction_id)
+            response_text, action, components, ai_summary = await handler(options, user_display_name, interaction_id)
 
         reply_resp = await edit_original_response(interaction_token, response_text, components)
         replied_ok = reply_resp.status_code < 300
@@ -72,6 +72,7 @@ async def process_command(payload: dict):
             action_taken=action,
             replied=replied_ok,
             mirrored=mirrored_ok,
+            ai_summary=ai_summary,
         )
 
     except Exception as e:

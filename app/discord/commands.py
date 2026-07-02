@@ -1,15 +1,16 @@
 """
 Command handler logic. Each handler receives the parsed interaction data
-and returns (response_text, action_taken_description).
+and returns (response_text, action_taken_description, components, ai_summary).
 """
+from app.ai.gemini import summarize_report
 
 
-def handle_report(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list]:
+async def handle_report(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list, str | None]:
     """
     Handles /report <text>.
     Simple rule: flag as 'urgent' if certain keywords are present.
-    Returns (response_text, action_taken, components) — components is a
-    Discord message-components array (a 'Mark Resolved' button).
+    Also runs the report text through Gemini for a short category/summary tag.
+    Returns (response_text, action_taken, components, ai_summary).
     """
     text = options.get("text", "")
     urgent_keywords = ["urgent", "asap", "broken", "down", "critical"]
@@ -21,6 +22,10 @@ def handle_report(options: dict, user_display_name: str, discord_interaction_id:
     else:
         response = f"✅ Report received from {user_display_name}: \"{text}\""
         action = "logged_normal"
+
+    ai_summary = await summarize_report(text)
+    if ai_summary:
+        response += f"\n🏷️ AI triage: {ai_summary}"
 
     components = [
         {
@@ -36,25 +41,16 @@ def handle_report(options: dict, user_display_name: str, discord_interaction_id:
         }
     ]
 
-    return response, action, components
+    return response, action, components, ai_summary
 
 
-def handle_status(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list]:
+async def handle_status(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list, str | None]:
     """
-    Handles /status. Just a simple health-check style reply. No buttons.
-    """
-    response = "🟢 Bot is online and processing commands normally."
-    action = "status_check"
-    return response, action, []
-
-
-def handle_status(options: dict, user_display_name: str, discord_interaction_id: str = None) -> tuple[str, str, list]:
-    """
-    Handles /status. Just a simple health-check style reply. No buttons.
+    Handles /status. Just a simple health-check style reply. No buttons, no AI.
     """
     response = "🟢 Bot is online and processing commands normally."
     action = "status_check"
-    return response, action, []
+    return response, action, [], None
 
 
 # Registry mapping command name -> handler function
@@ -69,10 +65,12 @@ def parse_options(interaction_data: dict) -> dict:
     options = interaction_data.get("options", [])
     return {opt["name"]: opt["value"] for opt in options}
 
-def handle_resolve_button(custom_id: str) -> tuple[str, list]:
+
+def handle_resolve_button(custom_id: str) -> tuple[str, list, str | None]:
     """
     Handles a 'Mark Resolved' button click.
-    Returns (new_content, new_components) to directly update the message.
+    Returns (new_content, new_components, original_interaction_id) to
+    directly update the message and locate the original report row.
     """
     original_interaction_id = custom_id.split(":", 1)[1] if ":" in custom_id else None
     new_content = "✅ This report has been marked as resolved."

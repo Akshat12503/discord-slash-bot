@@ -176,7 +176,7 @@ Live URL: https://discord-slash-bot-d96o.onrender.com
 
 ## What's not yet built (stretch goals)
 
-- Interactive buttons / modal forms (additional interaction types)
+- Interactive "Mark Resolved" button on `/report` replies — clicking it updates the message in-place and marks the report resolved in the log (exercises Discord's MESSAGE_COMPONENT interaction type, verified through the same signature-checked endpoint).
 - AI-based triage of report text (Gemini)
 - Multi-server support (schema supports it; UI doesn't yet)
 - Structured retry mechanism beyond marking failures for visibility

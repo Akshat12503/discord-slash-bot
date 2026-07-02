@@ -15,3 +15,5 @@ SESSION_SECRET = os.getenv("SESSION_SECRET")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
 MIRROR_WEBHOOK_URL = os.getenv("MIRROR_WEBHOOK_URL")
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
