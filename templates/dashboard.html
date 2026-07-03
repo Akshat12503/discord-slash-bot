@@ -25,6 +25,7 @@
         button:hover { background: #4752c4; }
         .cmd-name { font-weight: 600; width: 100px; }
         .empty { color: #666; font-style: italic; }
+        .ai-summary { color: #a5b4fc; max-width: 220px; }
     </style>
 </head>
 <body>
@@ -60,6 +61,7 @@
                     <th>Command</th>
                     <th>User</th>
                     <th>Action</th>
+                    <th>AI Summary</th>
                     <th>Status</th>
                     <th>Replied</th>
                     <th>Mirrored</th>
@@ -72,12 +74,13 @@
                     <td>/{{ i.command_name }}</td>
                     <td>{{ i.user_display_name }}</td>
                     <td>{{ i.action_taken or '—' }}</td>
+                    <td class="ai-summary">{{ i.ai_summary or '—' }}</td>
                     <td class="status-{{ i.status }}">{{ i.status }}</td>
                     <td><span class="badge badge-{{ i.replied|lower }}">{{ i.replied }}</span></td>
                     <td><span class="badge badge-{{ i.mirrored|lower }}">{{ i.mirrored }}</span></td>
                 </tr>
                 {% else %}
-                <tr><td colspan="7" class="empty">No commands run yet — try one in Discord.</td></tr>
+                <tr><td colspan="8" class="empty">No commands run yet — try one in Discord.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -92,7 +95,7 @@
                 const data = await res.json();
                 const tbody = document.getElementById('log-body');
                 if (!data.interactions || data.interactions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="7" class="empty">No commands run yet — try one in Discord.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" class="empty">No commands run yet — try one in Discord.</td></tr>';
                     return;
                 }
                 tbody.innerHTML = data.interactions.map(i => `
@@ -101,6 +104,7 @@
                         <td>/${i.command_name}</td>
                         <td>${i.user_display_name || ''}</td>
                         <td>${i.action_taken || '—'}</td>
+                        <td class="ai-summary">${i.ai_summary || '—'}</td>
                         <td class="status-${i.status}">${i.status}</td>
                         <td><span class="badge badge-${i.replied}">${i.replied}</span></td>
                         <td><span class="badge badge-${i.mirrored}">${i.mirrored}</span></td>
