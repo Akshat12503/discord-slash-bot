@@ -173,8 +173,8 @@ Live URL: `https://discord-slash-bot-d96o.onrender.com`
 3. For `/report`, click the **Mark Resolved** button that appears on the reply to see it update in-place.
 4. Watch the bot reply (including the AI triage tag), and check the mirror channel `#notifications` for the mirrored notification.
 5. Visit the dashboard: `https://discord-slash-bot-d96o.onrender.com/login`
-   - Email: `evaluator@test.com`
-   - Password: `[EVALUATOR PASSWORD]`
+   - Email: `testadmin@gmail.com`
+   - Password: `testadmin`
 
 ## Security notes
 
