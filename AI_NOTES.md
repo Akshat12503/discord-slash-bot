@@ -40,6 +40,4 @@ There were two significant debugging episodes worth documenting honestly:
 
 When debugging the Gemini `ai_summary` staying `NULL` with zero errors logged, part of my prompt to Claude was:
 
-> Still ai summary is showing null [after redeploying, updating the key, everything]. Should I share any file, or anything?
-
-Claude's response was to stop guessing at the app code and instead have me test the raw API key directly against Gemini's endpoint via PowerShell, independent of the app entirely — which immediately confirmed the key/model worked and redirected the investigation to Render's environment variable configuration instead of more app-code changes. That "isolate the external dependency first, before re-reading your own code again" approach was the most useful debugging pattern across the whole project.
+Claude's response was to stop guessing at the app code and instead have me test the raw API key directly against Gemini's endpoint via PowerShell, independent of the app entirely, which immediately confirmed the key/model worked and redirected the investigation to Render's environment variable configuration instead of more app-code changes. That "isolate the external dependency first, before re-reading your own code again" approach was the most useful debugging pattern across the whole project.
